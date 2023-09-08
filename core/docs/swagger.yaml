@@ -1,0 +1,66 @@
+definitions:
+  common.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  common.User:
+    properties:
+      id:
+        description: ID is the unique identifier for the user
+        type: integer
+      name:
+        description: Name is the name of the user
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Add a new user and return their ID
+      operationId: set-user
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/common.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorResponse'
+      summary: Set a new user
+  /user/{id}:
+    get:
+      description: Retrieve user details by user ID
+      operationId: get-user-by-id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorResponse'
+      summary: Get user by ID
+swagger: "2.0"

@@ -38,10 +38,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - run: go test -race -v -fuzzer -timeout=45m -log-dir=.
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: fuzz-test-logs
-          path: testutil/compose/fuzz/*.log
-          retention-days: 3
+      - run: |
+            chmod +x ./scripts/run_all_fuzz_tests.sh
+            ./scripts/run_all_fuzz_tests.sh

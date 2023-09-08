@@ -6,19 +6,13 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
+	"errors"
 	"log"
-	"net/url"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 	"unicode"
-
-	"github.com/obolnetwork/charon/app/errors"
-	"github.com/obolnetwork/charon/app/featureset"
-	"github.com/obolnetwork/charon/app/z"
 )
 
 var titlePrefix = regexp.MustCompile(`^[*\w]+(/[*\w]+)?$`)
@@ -34,12 +28,12 @@ func PRFromEnv() (PR, error) {
 	const prEnv = "GITHUB_PR"
 	prJSON, ok := os.LookupEnv(prEnv)
 	if !ok || strings.TrimSpace(prJSON) == "" {
-		return PR{}, errors.New("env variable not set", z.Str("var", prEnv))
+		return PR{}, errors.New("env variable not set")
 	}
 
 	var pr PR
 	if err := json.Unmarshal([]byte(prJSON), &pr); err != nil {
-		return PR{}, errors.Wrap(err, "unmarshal PR body")
+		return PR{}, err
 	}
 
 	if pr.Title == "" || pr.Body == "" || pr.ID == "" {
@@ -51,10 +45,6 @@ func PRFromEnv() (PR, error) {
 
 // verify returns an error if the PR doesn't correspond to the template defined in docs/contibuting.md.
 func verify() error {
-	if err := featureset.Init(context.Background(), featureset.Config{MinStatus: "alpha"}); err != nil {
-		return err
-	}
-
 	pr, err := PRFromEnv()
 	if err != nil {
 		return err
@@ -83,9 +73,7 @@ func verify() error {
 func verifyTitle(title string) error {
 	const maxTitleLen = 60
 	if len(title) > maxTitleLen {
-		return errors.New("title too long",
-			z.Int("max", maxTitleLen),
-			z.Int("actual", len(title)))
+		return errors.New("title too long")
 	}
 
 	split := strings.SplitN(title, ":", 2)
@@ -136,8 +124,6 @@ func verifyBody(body string) error {
 	var (
 		prevLineEmpty bool
 		foundCategory bool
-		foundTicket   bool
-		foundFeature  bool
 	)
 	for i, line := range strings.Split(body, "\n") {
 		if i == 0 && strings.TrimSpace(line) == "" {
@@ -171,67 +157,10 @@ func verifyBody(body string) error {
 			}
 
 			if !ok {
-				return errors.New("invalid category", z.Str("category", cat), z.Any("allows", allows))
+				return errors.New("invalid category")
 			}
 
 			foundCategory = true
-		}
-
-		const ticketTag = "ticket:"
-		if strings.HasPrefix(line, ticketTag) {
-			if foundTicket {
-				return errors.New("multiple ticket tag lines")
-			}
-
-			ticket := strings.TrimSpace(strings.TrimPrefix(line, ticketTag))
-
-			if ticket == "" {
-				return errors.New("ticket tag empty")
-			} else if ticket == "#000" {
-				return errors.New("invalid #000 ticket")
-			}
-
-			if strings.HasPrefix(ticket, "https://") {
-				if u, err := url.Parse(ticket); err != nil || u.Path == "" {
-					return errors.New("ticket tag invalid url")
-				}
-				// URL is fine
-			} else if ticket == "none" {
-				// None is also fine
-			} else if strings.HasPrefix(ticket, "#") {
-				_, err := strconv.Atoi(strings.TrimPrefix(ticket, "#"))
-				if err != nil {
-					return errors.New("ticket tag not a valid github link, #123")
-				}
-				// Link is also fine
-			} else {
-				return errors.New("invalid ticket tag")
-			}
-
-			foundTicket = true
-		}
-
-		const featureTag = "feature_flag:"
-		if strings.HasPrefix(line, featureTag) {
-			if foundFeature {
-				return errors.New("multiple feature_flag tag lines")
-			}
-
-			flag := strings.TrimSpace(strings.TrimPrefix(line, featureTag))
-
-			if flag == "" {
-				return errors.New("feature_flag tag empty")
-			} else if flag == "?" {
-				return errors.New("invalid ? feature_flag")
-			}
-
-			if strings.Contains(flag, " ") || strings.Contains(flag, "-") || strings.ToLower(flag) != flag {
-				return errors.New("feature flags are snake case, see app/featureset/featureset.go")
-			} else if !featureset.Enabled(featureset.Feature(flag)) {
-				return errors.New("unknown feature flag, see app/featureset/featureset.go")
-			}
-
-			foundFeature = true
 		}
 
 		prevLineEmpty = strings.TrimSpace(line) == ""
@@ -239,10 +168,6 @@ func verifyBody(body string) error {
 
 	if !foundCategory {
 		return errors.New("missing category tag")
-	}
-
-	if !foundTicket {
-		return errors.New("missing ticket tag")
 	}
 
 	return nil

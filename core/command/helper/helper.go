@@ -21,7 +21,7 @@ func (r *ClientCloseResult) GetOutput() string {
 // HandleSignals is a helper method for handling signals sent to the console
 // Like stop, error, etc.
 func HandleSignals(
-	closeFn func(),
+	closeFn func() error,
 	outputter command.OutputFormatter,
 ) error {
 	signalCh := getTerminationSignalCh()

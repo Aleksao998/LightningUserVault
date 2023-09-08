@@ -1,48 +1,59 @@
 package server
 
 import (
-	"github.com/Aleksao998/LightingUserVault/core/server/handlers"
+	"context"
 	"github.com/Aleksao998/LightingUserVault/core/server/routers"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
 	"log"
 	"net/http"
+	"time"
 )
 
 // Server is the central manager of the LightingUserVault
 type Server struct {
-	// config server config
-	config *Config
+	config     *Config
+	httpServer *http.Server
 }
 
 // NewServer creates a new LightingUserVault server, using the passed in configuration
 func NewServer(config *Config) (*Server, error) {
-	// initialize server
-	server := &Server{
-		config: config,
+	vault, err := storage.GetStorage()
+	if err != nil {
+		return nil, err
 	}
 
-	vault, _ := storage.GetStorage()
-
-	hendlers := handlers.NewUserHandler(vault)
-
-	// initialize server
-	router := routers.InitRouter(hendlers)
+	router := routers.InitRouter(vault)
 
 	// create http server instance
-	srv := &http.Server{
+	httpServer := &http.Server{
 		Addr:    ":9097",
 		Handler: router,
 	}
 
+	// initialize server
+	server := &Server{
+		config:     config,
+		httpServer: httpServer,
+	}
+
 	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+		if err := server.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Printf("listen: %s\n", err)
 		}
 	}()
 
 	return server, nil
 }
 
-// Close closes the LightingUserVault server
-func (s *Server) Close() {
+// Close gracefully shuts down the LightingUserVault server
+func (s *Server) Close() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := s.httpServer.Shutdown(ctx); err != nil {
+		log.Printf("Server Shutdown Failed:%+v", err)
+		return err
+	}
+	log.Println("Server gracefully stopped")
+	return nil
 }

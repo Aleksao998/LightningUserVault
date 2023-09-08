@@ -2,11 +2,12 @@ package server
 
 import (
 	"context"
-	"github.com/Aleksao998/LightingUserVault/core/server/routers"
-	"github.com/Aleksao998/LightingUserVault/core/storage"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/Aleksao998/LightingUserVault/core/server/routers"
+	"github.com/Aleksao998/LightingUserVault/core/storage"
 )
 
 // Server is the central manager of the LightingUserVault
@@ -26,8 +27,9 @@ func NewServer(config *Config) (*Server, error) {
 
 	// create http server instance
 	httpServer := &http.Server{
-		Addr:    ":9097",
-		Handler: router,
+		Addr:              ":9097",
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	// initialize server
@@ -52,8 +54,11 @@ func (s *Server) Close() error {
 
 	if err := s.httpServer.Shutdown(ctx); err != nil {
 		log.Printf("Server Shutdown Failed:%+v", err)
+
 		return err
 	}
+
 	log.Println("Server gracefully stopped")
+
 	return nil
 }

@@ -3,12 +3,13 @@ package routers
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/Aleksao998/LightingUserVault/core/common"
+	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRouter_GetUser(t *testing.T) {
@@ -17,6 +18,7 @@ func TestRouter_GetUser(t *testing.T) {
 	mockStorage := &mocks.MockStorage{
 		GetFn: func(key int64) (*common.User, error) {
 			user := common.User{Name: "User-1", ID: 1}
+
 			return &user, nil
 		},
 	}
@@ -29,7 +31,9 @@ func TestRouter_GetUser(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
+
 	var user common.User
+
 	err := json.Unmarshal(w.Body.Bytes(), &user)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
@@ -65,7 +69,9 @@ func TestRouter_SetUser(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
+
 	var user common.User
+
 	err := json.Unmarshal(w.Body.Bytes(), &user)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)

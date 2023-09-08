@@ -19,6 +19,7 @@ func InitRouter(vault storage.Storage) *gin.Engine {
 
 	// Swagger setup
 	docs.SwaggerInfo.BasePath = "/"
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// Init User Handler

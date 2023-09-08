@@ -1,16 +1,17 @@
-package userHandler
+package userhandler
 
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/Aleksao998/LightingUserVault/core/common"
+	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -24,6 +25,7 @@ func TestUserHandler_GetValidUser(t *testing.T) {
 	mockStorage := &mocks.MockStorage{
 		GetFn: func(key int64) (*common.User, error) {
 			user := common.User{Name: "User-1", ID: 1}
+
 			return &user, nil
 		},
 	}
@@ -47,6 +49,7 @@ func TestUserHandler_GetValidUser(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	var user common.User
+
 	err := json.Unmarshal(w.Body.Bytes(), &user)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
@@ -80,12 +83,13 @@ func TestUserHandler_GetWithInvalidParams(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
 	var jsonError common.ErrorResponse
+
 	err := json.Unmarshal(w.Body.Bytes(), &jsonError)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
 	}
 
-	assert.Equal(t, errInvalidUserId.Error(), jsonError.Error)
+	assert.Equal(t, errInvalidUserID.Error(), jsonError.Error)
 }
 
 func TestUserHandler_GetMissingUser(t *testing.T) {
@@ -116,6 +120,7 @@ func TestUserHandler_GetMissingUser(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
 	var jsonError common.ErrorResponse
+
 	err := json.Unmarshal(w.Body.Bytes(), &jsonError)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
@@ -138,10 +143,12 @@ func TestUserHandler_SetValidUser(t *testing.T) {
 
 	// Create a new HTTP request with a valid user JSON body
 	userJSON := `{"Name": "User-1"}`
+
 	req, err := http.NewRequest(http.MethodPost, "/user", strings.NewReader(userJSON))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	// Create a response recorder
@@ -158,6 +165,7 @@ func TestUserHandler_SetValidUser(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	var user common.User
+
 	err = json.Unmarshal(w.Body.Bytes(), &user)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
@@ -181,10 +189,12 @@ func TestUserHandler_SetInternalError(t *testing.T) {
 
 	// Create a new HTTP request with a user which does not exists
 	userJSON := `{"Name": "User-1"}`
+
 	req, err := http.NewRequest(http.MethodPost, "/user", strings.NewReader(userJSON))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	// Create a response recorder
@@ -201,6 +211,7 @@ func TestUserHandler_SetInternalError(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 
 	var jsonError common.ErrorResponse
+
 	err = json.Unmarshal(w.Body.Bytes(), &jsonError)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
@@ -219,10 +230,12 @@ func TestUserHandler_SetMissingParams(t *testing.T) {
 
 	// Create a new HTTP request with missing user name
 	userJSON := `{}`
+
 	req, err := http.NewRequest(http.MethodPost, "/user", strings.NewReader(userJSON))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	// Create a response recorder
@@ -239,6 +252,7 @@ func TestUserHandler_SetMissingParams(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
 	var jsonError common.ErrorResponse
+
 	err = json.Unmarshal(w.Body.Bytes(), &jsonError)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
@@ -257,10 +271,12 @@ func TestUserHandler_SetInvalidJsonParams(t *testing.T) {
 
 	// Create a new HTTP request with invalid JSON body
 	userJSON := `{ "Name": "User-1`
+
 	req, err := http.NewRequest(http.MethodPost, "/user", strings.NewReader(userJSON))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	// Create a response recorder
@@ -277,10 +293,11 @@ func TestUserHandler_SetInvalidJsonParams(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
 	var jsonError common.ErrorResponse
+
 	err = json.Unmarshal(w.Body.Bytes(), &jsonError)
 	if err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
 	}
 
-	assert.Equal(t, errInvalidReqJsonParam.Error(), jsonError.Error)
+	assert.Equal(t, errInvalidReqJSONParam.Error(), jsonError.Error)
 }

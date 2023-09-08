@@ -2,9 +2,9 @@ package root
 
 import (
 	"fmt"
-	"github.com/Aleksao998/LightingUserVault/core/command/server"
 	"os"
 
+	"github.com/Aleksao998/LightingUserVault/core/command/server"
 	"github.com/spf13/cobra"
 )
 

@@ -3,11 +3,12 @@ package helper
 import (
 	"errors"
 	"fmt"
-	"github.com/Aleksao998/LightingUserVault/core/command"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Aleksao998/LightingUserVault/core/command"
 )
 
 type ClientCloseResult struct {

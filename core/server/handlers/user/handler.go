@@ -1,18 +1,19 @@
-package userHandler
+package userhandler
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
 )
 
 var (
-	errInvalidUserId       = errors.New("Invalid user ID")
-	errInvalidUserName     = errors.New("Invalid user name")
-	errInvalidReqJsonParam = errors.New("Request is invalid json")
+	errInvalidUserID       = errors.New("invalid user ID")
+	errInvalidUserName     = errors.New("invalid user name")
+	errInvalidReqJSONParam = errors.New("request is invalid json")
 )
 
 type UserHandler struct {
@@ -36,15 +37,18 @@ func NewUserHandler(storage storage.Storage) *UserHandler {
 // @Router /user/{id} [get]
 func (h *UserHandler) GetHandler(c *gin.Context) {
 	idStr := c.Param("id")
+
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidUserId.Error()})
+		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidUserID.Error()})
+
 		return
 	}
 
 	user, err := h.vault.Get(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, common.ErrorResponse{Error: err.Error()})
+
 		return
 	}
 
@@ -63,18 +67,21 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 func (h *UserHandler) SetHandler(c *gin.Context) {
 	var user common.User
 	if err := c.BindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidReqJsonParam.Error()})
+		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidReqJSONParam.Error()})
+
 		return
 	}
 
 	if user.Name == "" {
 		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidUserName.Error()})
+
 		return
 	}
 
 	id, err := h.vault.Set(user.Name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, common.ErrorResponse{Error: err.Error()})
+
 		return
 	}
 

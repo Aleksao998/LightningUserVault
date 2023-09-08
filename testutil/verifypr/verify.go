@@ -27,6 +27,7 @@ type PR struct {
 func PRFromEnv() (PR, error) {
 	const prEnv = "GITHUB_PR"
 	prJSON, ok := os.LookupEnv(prEnv)
+
 	if !ok || strings.TrimSpace(prJSON) == "" {
 		return PR{}, errors.New("env variable not set")
 	}
@@ -117,6 +118,7 @@ func verifyBody(body string) error {
 	if strings.TrimSpace(body) == "" {
 		return errors.New("body empty")
 	}
+
 	if strings.Contains(body, "<!--") {
 		return errors.New("instructions not deleted (markdown comments present)")
 	}
@@ -125,6 +127,7 @@ func verifyBody(body string) error {
 		prevLineEmpty bool
 		foundCategory bool
 	)
+
 	for i, line := range strings.Split(body, "\n") {
 		if i == 0 && strings.TrimSpace(line) == "" {
 			return errors.New("first line empty")
@@ -135,6 +138,7 @@ func verifyBody(body string) error {
 			if foundCategory {
 				return errors.New("multiple category tag lines")
 			}
+
 			if !prevLineEmpty {
 				return errors.New("category tag not preceded by empty line")
 			}
@@ -149,9 +153,11 @@ func verifyBody(body string) error {
 				ok     bool
 				allows = []string{"feature", "bug", "refactor", "docs", "test", "fixbuild", "misc"}
 			)
+
 			for _, allow := range allows {
 				if allow == cat {
 					ok = true
+
 					break
 				}
 			}

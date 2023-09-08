@@ -37,7 +37,7 @@ func (p *Storage) Set(value string) (int64, error) {
 	id := p.getNextID()
 
 	_, _, err := p.db.Get(id)
-	if errors.Is(err, pebble.ErrNotFound) {
+	if !errors.Is(err, pebble.ErrNotFound) {
 		panic(fmt.Sprintf("Id already exists %d:%v", common.BytesToInt64(id), err))
 	}
 

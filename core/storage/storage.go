@@ -2,7 +2,7 @@ package storage
 
 import (
 	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage/sql/postgresql"
+	"github.com/Aleksao998/LightingUserVault/core/storage/keyvalue/pebble"
 )
 
 // Storage represents a database interface.
@@ -15,6 +15,5 @@ type Storage interface {
 }
 
 func GetStorage() (Storage, error) {
-
-	return postgresql.NewStorage("")
+	return pebble.NewStorage("test-storage")
 }

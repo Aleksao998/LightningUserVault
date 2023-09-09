@@ -13,8 +13,6 @@ import (
 )
 
 func TestRouter_GetUser(t *testing.T) {
-	t.Parallel()
-
 	mockStorage := &mocks.MockStorage{
 		GetFn: func(key int64) (*common.User, error) {
 			user := common.User{Name: "User-1", ID: 1}
@@ -44,8 +42,6 @@ func TestRouter_GetUser(t *testing.T) {
 }
 
 func TestRouter_SetUser(t *testing.T) {
-	t.Parallel()
-
 	mockStorage := &mocks.MockStorage{
 		SetFn: func(value string) (int64, error) {
 			return 1, nil

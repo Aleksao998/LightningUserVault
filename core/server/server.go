@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Aleksao998/LightingUserVault/core/cache/memcached"
 	"github.com/Aleksao998/LightingUserVault/core/server/routers"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
 )
@@ -23,7 +24,12 @@ func NewServer(config *Config) (*Server, error) {
 		return nil, err
 	}
 
-	router := routers.InitRouter(vault)
+	cache, err := memcached.NewMemcacheCache("127.0.0.1:11211")
+	if err != nil {
+		return nil, err
+	}
+
+	router := routers.InitRouter(vault, cache)
 
 	// create http server instance
 	httpServer := &http.Server{

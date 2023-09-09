@@ -15,6 +15,7 @@ func TestInt64ToBytes(t *testing.T) {
 		{input: 0, output: []byte{0, 0, 0, 0, 0, 0, 0, 0}},
 		{input: 1, output: []byte{1, 0, 0, 0, 0, 0, 0, 0}},
 		{input: -1, output: []byte{255, 255, 255, 255, 255, 255, 255, 255}},
+		// Add more test values as needed
 	}
 
 	for _, test := range tests {
@@ -32,6 +33,7 @@ func TestBytesToInt64(t *testing.T) {
 		{input: []byte{0, 0, 0, 0, 0, 0, 0, 0}, output: 0},
 		{input: []byte{1, 0, 0, 0, 0, 0, 0, 0}, output: 1},
 		{input: []byte{255, 255, 255, 255, 255, 255, 255, 255}, output: -1},
+		// Add more test values as needed
 	}
 
 	for _, test := range tests {

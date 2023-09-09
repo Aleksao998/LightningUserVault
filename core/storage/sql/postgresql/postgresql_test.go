@@ -2,9 +2,9 @@ package postgresql
 
 import (
 	"errors"
-	"github.com/Aleksao998/LightingUserVault/core/common"
 	"testing"
 
+	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"

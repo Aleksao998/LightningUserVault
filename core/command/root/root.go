@@ -15,7 +15,7 @@ type RootCommand struct {
 func NewRootCommand() *RootCommand {
 	rootCommand := &RootCommand{
 		baseCmd: &cobra.Command{
-			Short: "LightingUserVault is a high-performance storage solution for rapid user data retrieval and management.",
+			Short: "LightingUserVault is a high-performance storage solution for rapid user data retrieval and management",
 		},
 	}
 

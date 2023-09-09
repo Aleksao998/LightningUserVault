@@ -3,13 +3,13 @@ package server
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Aleksao998/LightingUserVault/core/cache"
 	"github.com/Aleksao998/LightingUserVault/core/server/routers"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 // Server is the central manager of the LightingUserVault
@@ -22,39 +22,61 @@ type Server struct {
 
 // NewServer creates a new LightingUserVault server, using the passed in configuration
 func NewServer(config *Config) (*Server, error) {
-	// Get a production config
+	// get a production config
 	cfg := zap.NewProductionConfig()
 
-	// Set the desired log level
-	cfg.Level.SetLevel(zapcore.DebugLevel)
+	// set the desired log level
+	cfg.Level.SetLevel(config.LogLevel)
 
-	// Build the logger
+	// build the logger
 	logger, err := cfg.Build()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	defer logger.Sync()
 
-	vault, err := storage.GetStorage(logger)
+	// create storage config
+	storageConfig := storage.Config{
+		StorageType: config.StorageType,
+		DBHost:      config.DBHost.IP.String(),
+		DBPort:      strconv.Itoa(config.DBHost.Port),
+		DBPass:      config.DBPass,
+		DBName:      config.DBName,
+		DBUser:      config.DBUser,
+	}
+
+	// initialize storage
+	vault, err := storage.GetStorage(logger, storageConfig)
 	if err != nil {
 		logger.Error("Failed to get storage", zap.Error(err))
 
 		return nil, err
 	}
 
-	cacheMechanism, err := cache.GetCache(logger, "127.0.0.1:11211")
+	// create cache config
+	cacheConfig := cache.Config{
+		CacheType:       config.CacheType,
+		MemcacheAddress: config.MemcacheAddress,
+	}
+
+	// initialize cache
+	cacheMechanism, err := cache.GetCache(logger, cacheConfig)
 	if err != nil {
 		logger.Error("Failed to get cache", zap.Error(err))
 
 		return nil, err
 	}
 
-	router := routers.InitRouter(logger, vault, cacheMechanism)
+	routerConfig := routers.Config{
+		CacheEnabled: config.EnableCache,
+	}
+
+	router := routers.InitRouter(logger, vault, cacheMechanism, routerConfig)
 
 	// create http server instance
 	httpServer := &http.Server{
-		Addr:              ":9097",
+		Addr:              config.ServerAddress.String(),
 		Handler:           router,
 		ReadHeaderTimeout: 5 * time.Second,
 	}

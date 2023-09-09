@@ -3,6 +3,7 @@ package helper
 import (
 	"errors"
 	"fmt"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,6 +18,22 @@ type ClientCloseResult struct {
 
 func (r *ClientCloseResult) GetOutput() string {
 	return r.Message
+}
+
+// ResolveAddr resolves the passed in TCP address
+// The second param is the default ip to bind to, if no ip address is specified
+func ResolveAddr(address string, defaultIP IPBinding) (*net.TCPAddr, error) {
+	addr, err := net.ResolveTCPAddr("tcp", address)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse addr '%s': %w", address, err)
+	}
+
+	if addr.IP == nil {
+		addr.IP = net.ParseIP(string(defaultIP))
+	}
+
+	return addr, nil
 }
 
 // HandleSignals is a helper method for handling signals sent to the console

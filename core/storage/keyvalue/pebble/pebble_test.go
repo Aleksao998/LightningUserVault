@@ -8,6 +8,7 @@ import (
 
 	"github.com/cockroachdb/pebble"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 func createPebbleStorage() (string, *Storage, error) {
@@ -18,7 +19,7 @@ func createPebbleStorage() (string, *Storage, error) {
 	}
 
 	// Initialize a new Pebble storage instance
-	store, err := NewStorage(tempDir)
+	store, err := NewStorage(tempDir, zap.NewNop())
 	if err != nil {
 		os.RemoveAll(tempDir)
 

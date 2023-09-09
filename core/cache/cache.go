@@ -1,6 +1,10 @@
 package cache
 
-import "github.com/Aleksao998/LightingUserVault/core/common"
+import (
+	"github.com/Aleksao998/LightingUserVault/core/cache/memcached"
+	"github.com/Aleksao998/LightingUserVault/core/common"
+	"go.uber.org/zap"
+)
 
 // Cache represents a caching interface
 type Cache interface {
@@ -9,4 +13,8 @@ type Cache interface {
 
 	// Get retrieves a value from the cache using a given key.
 	Get(key int64) (*common.User, error)
+}
+
+func GetCache(logger *zap.Logger, path string) (Cache, error) {
+	return memcached.NewMemcacheCache(logger, path)
 }

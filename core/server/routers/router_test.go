@@ -11,6 +11,7 @@ import (
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	storageMock "github.com/Aleksao998/LightingUserVault/core/storage/mocks"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 // TestRouter_GetUser tests the successful retrieval of a user via the router's endpoint
@@ -25,7 +26,7 @@ func TestRouter_GetUser(t *testing.T) {
 	}
 
 	// Create test handler
-	router := InitRouter(mockStorage, mockCache)
+	router := InitRouter(zap.NewNop(), mockStorage, mockCache)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/user/1", nil)
@@ -54,7 +55,7 @@ func TestRouter_SetUser(t *testing.T) {
 	mockCache := &cacheMock.MockCache{}
 
 	// Create test handler
-	router := InitRouter(mockStorage, mockCache)
+	router := InitRouter(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a mock user data for the POST request
 	userData := map[string]interface{}{

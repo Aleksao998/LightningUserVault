@@ -13,6 +13,7 @@ import (
 	storageMock "github.com/Aleksao998/LightingUserVault/core/storage/mocks"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 var (
@@ -29,7 +30,7 @@ func TestUserHandler_GetWithInvalidParams(t *testing.T) {
 	mockCache := &cacheMock.MockCache{}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -70,7 +71,7 @@ func TestUserHandler_GetValidUserCache(t *testing.T) {
 	}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -119,7 +120,7 @@ func TestUserHandler_GetValidUserDB(t *testing.T) {
 	}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -166,7 +167,7 @@ func TestUserHandler_GetMissingUser(t *testing.T) {
 	}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -212,7 +213,7 @@ func TestUserHandler_GetErrSaveCache(t *testing.T) {
 	}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -251,7 +252,7 @@ func TestUserHandler_SetValidUser(t *testing.T) {
 	mockCache := &cacheMock.MockCache{}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a new HTTP request with a valid user JSON body
 	userJSON := `{"Name": "User-1"}`
@@ -299,7 +300,7 @@ func TestUserHandler_SetInternalError(t *testing.T) {
 	mockCache := &cacheMock.MockCache{}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a new HTTP request with a user which does not exists
 	userJSON := `{"Name": "User-1"}`
@@ -342,7 +343,7 @@ func TestUserHandler_SetMissingParams(t *testing.T) {
 	mockCache := &cacheMock.MockCache{}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a new HTTP request with missing user name
 	userJSON := `{}`
@@ -385,7 +386,7 @@ func TestUserHandler_SetInvalidJsonParams(t *testing.T) {
 	mockCache := &cacheMock.MockCache{}
 
 	// Create test handler
-	handler := NewUserHandler(mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
 
 	// Create a new HTTP request with invalid JSON body
 	userJSON := `{ "Name": "User-1`

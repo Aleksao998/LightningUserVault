@@ -9,6 +9,7 @@ import (
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 var (
@@ -24,6 +25,7 @@ func TestMemcache_SetValid(t *testing.T) {
 				return nil
 			},
 		},
+		logger: zap.NewNop(),
 	}
 
 	user := &common.User{Name: "Valid User"}
@@ -39,6 +41,7 @@ func TestMemcache_SetInternalError(t *testing.T) {
 				return errInternal
 			},
 		},
+		logger: zap.NewNop(),
 	}
 
 	user := &common.User{Name: "Another User"}
@@ -55,6 +58,7 @@ func TestMemcache_GetClientError(t *testing.T) {
 				return nil, errClient
 			},
 		},
+		logger: zap.NewNop(),
 	}
 
 	user, err := cache.Get(1)
@@ -75,6 +79,7 @@ func TestMemcache_GetValid(t *testing.T) {
 				return &memcache.Item{Value: data}, nil
 			},
 		},
+		logger: zap.NewNop(),
 	}
 
 	user, err := cache.Get(1)

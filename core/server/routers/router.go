@@ -8,10 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.uber.org/zap"
 )
 
 // InitRouter initializes a new Gin router with predefined routes and middleware
-func InitRouter(vault storage.Storage, cache cache.Cache) *gin.Engine {
+func InitRouter(logger *zap.Logger, vault storage.Storage, cache cache.Cache) *gin.Engine {
 	r := gin.New()
 
 	// Middleware
@@ -24,7 +25,7 @@ func InitRouter(vault storage.Storage, cache cache.Cache) *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// Init User Handler
-	handler := userHandler.NewUserHandler(vault, cache)
+	handler := userHandler.NewUserHandler(logger, vault, cache)
 
 	// User routes
 	userGroup := r.Group("/user")

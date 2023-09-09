@@ -3,6 +3,7 @@ package storage
 import (
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage/keyvalue/pebble"
+	"go.uber.org/zap"
 )
 
 // Storage represents a database interface.
@@ -12,8 +13,11 @@ type Storage interface {
 
 	// Get retrieves the value for a given user ID and returns an error if any issue occurs during the operation
 	Get(key int64) (*common.User, error)
+
+	// Close closes storage instance
+	Close() error
 }
 
-func GetStorage() (Storage, error) {
-	return pebble.NewStorage("test-storage")
+func GetStorage(logger *zap.Logger) (Storage, error) {
+	return pebble.NewStorage("test-storage", logger)
 }

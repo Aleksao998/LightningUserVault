@@ -9,6 +9,7 @@ import (
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 var (
@@ -18,15 +19,17 @@ var (
 )
 
 type UserHandler struct {
-	vault storage.Storage
-	cache cache.Cache
+	vault  storage.Storage
+	cache  cache.Cache
+	logger *zap.Logger
 }
 
 // NewUserHandler creates a new UserHandler with the given storage
-func NewUserHandler(storage storage.Storage, cache cache.Cache) *UserHandler {
+func NewUserHandler(logger *zap.Logger, storage storage.Storage, cache cache.Cache) *UserHandler {
 	return &UserHandler{
-		vault: storage,
-		cache: cache,
+		vault:  storage,
+		cache:  cache,
+		logger: logger,
 	}
 }
 
@@ -43,6 +46,7 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		h.logger.Warn("Invalid user ID received", zap.String("id", idStr))
 		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidUserID.Error()})
 
 		return
@@ -51,6 +55,7 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 	// Try to get the user from cache first
 	user, err := h.cache.Get(id)
 	if err == nil {
+		h.logger.Debug("User fetched from cache", zap.Int64("id", id))
 		c.JSON(http.StatusOK, user)
 
 		return
@@ -59,6 +64,7 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 	// If not in cache, get from vault
 	user, err = h.vault.Get(id)
 	if err != nil {
+		h.logger.Error("Failed to fetch user from vault", zap.Int64("id", id), zap.Error(err))
 		c.JSON(http.StatusNotFound, common.ErrorResponse{Error: err.Error()})
 
 		return
@@ -67,9 +73,12 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 	// Store the fetched user in cache
 	err = h.cache.Set(id, user)
 	if err != nil {
-		//  TODO log
+		h.logger.Error("Failed to set user in cache", zap.Int64("id", id), zap.Error(err))
+	} else {
+		h.logger.Debug("User stored in cache", zap.Int64("id", id))
 	}
 
+	h.logger.Info("Returning user data", zap.Int64("id", id))
 	c.JSON(http.StatusOK, user)
 }
 
@@ -85,12 +94,14 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 func (h *UserHandler) SetHandler(c *gin.Context) {
 	var user common.User
 	if err := c.BindJSON(&user); err != nil {
+		h.logger.Warn("Invalid JSON received", zap.Error(err))
 		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidReqJSONParam.Error()})
 
 		return
 	}
 
 	if user.Name == "" {
+		h.logger.Warn("Invalid user name received", zap.String("name", user.Name))
 		c.JSON(http.StatusBadRequest, common.ErrorResponse{Error: errInvalidUserName.Error()})
 
 		return
@@ -98,12 +109,13 @@ func (h *UserHandler) SetHandler(c *gin.Context) {
 
 	id, err := h.vault.Set(user.Name)
 	if err != nil {
+		h.logger.Error("Failed to set user in vault", zap.String("name", user.Name), zap.Error(err))
 		c.JSON(http.StatusInternalServerError, common.ErrorResponse{Error: err.Error()})
 
 		return
 	}
 
 	user.ID = id
-
+	h.logger.Info("User successfully stored", zap.Int64("id", id), zap.String("name", user.Name))
 	c.JSON(http.StatusOK, user)
 }

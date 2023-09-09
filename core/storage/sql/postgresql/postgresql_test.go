@@ -7,6 +7,7 @@ import (
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -30,7 +31,8 @@ func TestPostgres_GetValid(t *testing.T) {
 	}
 
 	storage := &Storage{
-		db: mockDB,
+		db:     mockDB,
+		logger: zap.NewNop(),
 	}
 
 	user, err := storage.Get(1)
@@ -51,7 +53,8 @@ func TestPostgres_GetNotFound(t *testing.T) {
 	}
 
 	storage := &Storage{
-		db: mockDB,
+		db:     mockDB,
+		logger: zap.NewNop(),
 	}
 
 	user, err := storage.Get(1)
@@ -71,7 +74,8 @@ func TestPostgres_GetInternalError(t *testing.T) {
 	}
 
 	storage := &Storage{
-		db: mockDB,
+		db:     mockDB,
+		logger: zap.NewNop(),
 	}
 
 	user, err := storage.Get(1)
@@ -98,7 +102,8 @@ func TestPostgres_SetSuccessfully(t *testing.T) {
 	}
 
 	storage := &Storage{
-		db: mockDB,
+		db:     mockDB,
+		logger: zap.NewNop(),
 	}
 
 	id, err := storage.Set("Mocked User")
@@ -117,7 +122,8 @@ func TestPostgres_SetError(t *testing.T) {
 	}
 
 	storage := &Storage{
-		db: mockDB,
+		db:     mockDB,
+		logger: zap.NewNop(),
 	}
 
 	id, err := storage.Set("Mocked User")

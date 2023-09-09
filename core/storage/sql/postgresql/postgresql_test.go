@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"errors"
+	"github.com/Aleksao998/LightingUserVault/core/common"
 	"testing"
 
 	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
@@ -17,7 +18,7 @@ func TestPostgres_GetValid(t *testing.T) {
 
 	mockDB := &mocks.MockSQLdb{
 		FirstFn: func(out interface{}, where ...interface{}) *gorm.DB {
-			u, ok := out.(*User)
+			u, ok := out.(*common.User)
 			if !ok {
 				t.Fatalf("value is not of type *User")
 			}

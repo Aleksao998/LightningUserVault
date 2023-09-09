@@ -1,10 +1,21 @@
 package storage
 
 import (
+	"errors"
+	"fmt"
+
+	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage/keyvalue/pebble"
+	"github.com/Aleksao998/LightingUserVault/core/storage/sql/postgresql"
 	"go.uber.org/zap"
 )
+
+const (
+	pebbleStorageRoute = "pebble-storage"
+)
+
+var errInvalidStorage = errors.New("invalid storage type")
 
 // Storage represents a database interface.
 type Storage interface {
@@ -18,6 +29,27 @@ type Storage interface {
 	Close() error
 }
 
-func GetStorage(logger *zap.Logger) (Storage, error) {
-	return pebble.NewStorage("test-storage", logger)
+type Config struct {
+	StorageType types.StorageType
+	DBHost      string
+	DBPort      string
+	DBUser      string
+	DBPass      string
+	DBName      string
+}
+
+func GetStorage(logger *zap.Logger, config Config) (Storage, error) {
+	switch config.StorageType {
+	case types.PEBBLE:
+		return pebble.NewStorage(pebbleStorageRoute, logger)
+	case types.POSTGRESQL:
+		fmt.Println(config)
+		psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
+			"password=%s dbname=%s sslmode=disable",
+			config.DBHost, config.DBPort, config.DBName, config.DBPass, config.DBName)
+
+		return postgresql.NewStorage(logger, psqlInfo)
+	default:
+		return nil, errInvalidStorage
+	}
 }

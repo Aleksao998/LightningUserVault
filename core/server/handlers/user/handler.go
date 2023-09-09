@@ -18,18 +18,24 @@ var (
 	errInvalidReqJSONParam = errors.New("request is invalid json")
 )
 
+type Config struct {
+	CacheEnabled bool
+}
+
 type UserHandler struct {
 	vault  storage.Storage
 	cache  cache.Cache
 	logger *zap.Logger
+	config Config
 }
 
 // NewUserHandler creates a new UserHandler with the given storage
-func NewUserHandler(logger *zap.Logger, storage storage.Storage, cache cache.Cache) *UserHandler {
+func NewUserHandler(logger *zap.Logger, storage storage.Storage, cache cache.Cache, config Config) *UserHandler {
 	return &UserHandler{
 		vault:  storage,
 		cache:  cache,
 		logger: logger,
+		config: config,
 	}
 }
 
@@ -52,17 +58,19 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 		return
 	}
 
-	// Try to get the user from cache first
-	user, err := h.cache.Get(id)
-	if err == nil {
-		h.logger.Debug("User fetched from cache", zap.Int64("id", id))
-		c.JSON(http.StatusOK, user)
+	if h.config.CacheEnabled {
+		// Try to get the user from cache first
+		user, err := h.cache.Get(id)
+		if err == nil {
+			h.logger.Debug("User fetched from cache", zap.Int64("id", id))
+			c.JSON(http.StatusOK, user)
 
-		return
+			return
+		}
 	}
 
 	// If not in cache, get from vault
-	user, err = h.vault.Get(id)
+	user, err := h.vault.Get(id)
 	if err != nil {
 		h.logger.Error("Failed to fetch user from vault", zap.Int64("id", id), zap.Error(err))
 		c.JSON(http.StatusNotFound, common.ErrorResponse{Error: err.Error()})
@@ -70,12 +78,14 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 		return
 	}
 
-	// Store the fetched user in cache
-	err = h.cache.Set(id, user)
-	if err != nil {
-		h.logger.Error("Failed to set user in cache", zap.Int64("id", id), zap.Error(err))
-	} else {
-		h.logger.Debug("User stored in cache", zap.Int64("id", id))
+	if h.config.CacheEnabled {
+		// Store the fetched user in cache
+		err = h.cache.Set(id, user)
+		if err != nil {
+			h.logger.Error("Failed to set user in cache", zap.Int64("id", id), zap.Error(err))
+		} else {
+			h.logger.Debug("User stored in cache", zap.Int64("id", id))
+		}
 	}
 
 	h.logger.Info("Returning user data", zap.Int64("id", id))

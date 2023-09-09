@@ -29,8 +29,12 @@ func TestUserHandler_GetWithInvalidParams(t *testing.T) {
 	mockStorage := &storageMock.MockStorage{}
 	mockCache := &cacheMock.MockCache{}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -70,8 +74,12 @@ func TestUserHandler_GetValidUserCache(t *testing.T) {
 		},
 	}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -119,8 +127,12 @@ func TestUserHandler_GetValidUserDB(t *testing.T) {
 		},
 	}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -166,8 +178,12 @@ func TestUserHandler_GetMissingUser(t *testing.T) {
 		},
 	}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -212,8 +228,12 @@ func TestUserHandler_GetErrSaveCache(t *testing.T) {
 		},
 	}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -251,8 +271,12 @@ func TestUserHandler_SetValidUser(t *testing.T) {
 	}
 	mockCache := &cacheMock.MockCache{}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a new HTTP request with a valid user JSON body
 	userJSON := `{"Name": "User-1"}`
@@ -299,8 +323,12 @@ func TestUserHandler_SetInternalError(t *testing.T) {
 	}
 	mockCache := &cacheMock.MockCache{}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a new HTTP request with a user which does not exists
 	userJSON := `{"Name": "User-1"}`
@@ -342,8 +370,12 @@ func TestUserHandler_SetMissingParams(t *testing.T) {
 	mockStorage := &storageMock.MockStorage{}
 	mockCache := &cacheMock.MockCache{}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a new HTTP request with missing user name
 	userJSON := `{}`
@@ -385,8 +417,12 @@ func TestUserHandler_SetInvalidJsonParams(t *testing.T) {
 	mockStorage := &storageMock.MockStorage{}
 	mockCache := &cacheMock.MockCache{}
 
+	handlerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache)
+	handler := NewUserHandler(zap.NewNop(), mockStorage, mockCache, handlerConfig)
 
 	// Create a new HTTP request with invalid JSON body
 	userJSON := `{ "Name": "User-1`

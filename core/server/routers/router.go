@@ -11,8 +11,12 @@ import (
 	"go.uber.org/zap"
 )
 
+type Config struct {
+	CacheEnabled bool
+}
+
 // InitRouter initializes a new Gin router with predefined routes and middleware
-func InitRouter(logger *zap.Logger, vault storage.Storage, cache cache.Cache) *gin.Engine {
+func InitRouter(logger *zap.Logger, vault storage.Storage, cache cache.Cache, config Config) *gin.Engine {
 	r := gin.New()
 
 	// Middleware
@@ -24,8 +28,12 @@ func InitRouter(logger *zap.Logger, vault storage.Storage, cache cache.Cache) *g
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
+	handlerConfig := userHandler.Config{
+		CacheEnabled: config.CacheEnabled,
+	}
+
 	// Init User Handler
-	handler := userHandler.NewUserHandler(logger, vault, cache)
+	handler := userHandler.NewUserHandler(logger, vault, cache, handlerConfig)
 
 	// User routes
 	userGroup := r.Group("/user")

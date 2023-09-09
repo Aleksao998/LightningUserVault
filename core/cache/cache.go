@@ -1,10 +1,16 @@
 package cache
 
 import (
-	"github.com/Aleksao998/LightingUserVault/core/cache/memcached"
+	"errors"
+	"net"
+
+	"github.com/Aleksao998/LightingUserVault/core/cache/memcache"
+	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"go.uber.org/zap"
 )
+
+var errInvalidCache = errors.New("invalid cache type")
 
 // Cache represents a caching interface
 type Cache interface {
@@ -15,6 +21,16 @@ type Cache interface {
 	Get(key int64) (*common.User, error)
 }
 
-func GetCache(logger *zap.Logger, path string) (Cache, error) {
-	return memcached.NewMemcacheCache(logger, path)
+type Config struct {
+	CacheType       types.CacheType
+	MemcacheAddress *net.TCPAddr
+}
+
+func GetCache(logger *zap.Logger, config Config) (Cache, error) {
+	switch config.CacheType {
+	case types.MEMCACHE:
+		return memcache.NewMemcacheCache(logger, config.MemcacheAddress.String())
+	default:
+		return nil, errInvalidCache
+	}
 }

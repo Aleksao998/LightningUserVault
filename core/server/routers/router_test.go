@@ -25,8 +25,12 @@ func TestRouter_GetUser(t *testing.T) {
 		},
 	}
 
+	routerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	router := InitRouter(zap.NewNop(), mockStorage, mockCache)
+	router := InitRouter(zap.NewNop(), mockStorage, mockCache, routerConfig)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/user/1", nil)
@@ -54,8 +58,12 @@ func TestRouter_SetUser(t *testing.T) {
 	}
 	mockCache := &cacheMock.MockCache{}
 
+	routerConfig := Config{
+		CacheEnabled: true,
+	}
+
 	// Create test handler
-	router := InitRouter(zap.NewNop(), mockStorage, mockCache)
+	router := InitRouter(zap.NewNop(), mockStorage, mockCache, routerConfig)
 
 	// Create a mock user data for the POST request
 	userData := map[string]interface{}{

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Aleksao998/LightingUserVault/core/command"
 	"github.com/Aleksao998/LightingUserVault/core/command/helper"
@@ -26,70 +27,70 @@ func setFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
 		&params.logLevelRaw,
 		logLevelFlag,
-		"WARN",
+		getEnvWithDefault("LOG_LEVEL", "WARN"),
 		"the log level for console output",
 	)
 
 	cmd.Flags().StringVar(
 		&params.serverAddressRaw,
 		serverAddressFlag,
-		fmt.Sprintf("%s:%s", helper.DefaultServerEndpoint, helper.DefaultServerPort),
+		getEnvWithDefault("SERVER_ADDRESS", fmt.Sprintf("%s:%s", helper.DefaultServerEndpoint, helper.DefaultServerPort)),
 		"server endpoint",
 	)
 
 	cmd.Flags().BoolVar(
 		&params.enableCache,
 		enabledCacheFlag,
-		true,
+		getEnvWithDefault("ENABLE_CACHE", "true") == "true",
 		"flag which represents if cache mechanism is enabled",
 	)
 
 	cmd.Flags().StringVar(
 		&params.cacheTypeRaw,
 		cacheTypeFlag,
-		"MEMCACHE",
+		getEnvWithDefault("CACHE_TYPE", "MEMCACHE"),
 		"the type of cache, supported [MEMCACHE]",
 	)
 
 	cmd.Flags().StringVar(
 		&params.memcacheAddressRaw,
 		memcacheAddressFlag,
-		fmt.Sprintf("%s:%s", helper.DefaultServerEndpoint, helper.DefaultMemcachePort),
+		getEnvWithDefault("MEMCACHE_ADDRESS", fmt.Sprintf("%s:%s", helper.DefaultServerEndpoint, helper.DefaultMemcachePort)),
 		"memcache endpoint",
 	)
 
 	cmd.Flags().StringVar(
 		&params.storageTypeRaw,
 		storageTypeFlag,
-		"PEBBLE",
+		getEnvWithDefault("STORAGE_TYPE", "PEBBLE"),
 		"the type of storage, supported [PEBBLE, POSTRESQL]",
 	)
 
 	cmd.Flags().StringVar(
 		&params.dbHostRaw,
 		dbHostRawFlag,
-		fmt.Sprintf("%s:%s", helper.DefaultServerEndpoint, helper.DefaultDatabasePort),
+		getEnvWithDefault("DB_HOST", fmt.Sprintf("%s:%s", helper.DefaultServerEndpoint, helper.DefaultDatabasePort)),
 		"database host endpoint",
 	)
 
 	cmd.Flags().StringVar(
 		&params.dbUser,
 		dbUserFlag,
-		"postgres",
+		getEnvWithDefault("DB_USER", "postgres"),
 		"database user",
 	)
 
 	cmd.Flags().StringVar(
 		&params.dbPass,
 		dbPassFlag,
-		"postgres",
+		getEnvWithDefault("DB_PASS", "postgres"),
 		"database password",
 	)
 
 	cmd.Flags().StringVar(
 		&params.dbName,
 		dbNameFlag,
-		"postgres",
+		getEnvWithDefault("DB_NAME", "postgres"),
 		"database name",
 	)
 }
@@ -117,4 +118,14 @@ func runServerLoop(
 	}
 
 	return helper.HandleSignals(serverInstance.Close, outputter)
+}
+
+func getEnvWithDefault(key, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		fmt.Println(fmt.Sprintf("Exists %s", value))
+
+		return value
+	}
+
+	return defaultValue
 }

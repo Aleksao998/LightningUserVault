@@ -1,11 +1,12 @@
 package server
 
 import (
+	"net"
+	"testing"
+
 	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zapcore"
-	"net"
-	"testing"
 )
 
 func TestInitRawParams(t *testing.T) {

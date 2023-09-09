@@ -1,86 +1,77 @@
 package postgresql
 
 import (
-	"database/sql"
 	"errors"
 
 	"github.com/Aleksao998/LightingUserVault/core/common"
-	_ "github.com/lib/pq" //nolint: blank
+	"github.com/Aleksao998/LightingUserVault/core/storage/sql"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var errUserNotFound = errors.New("user not found")
 
-const (
-	getUserQuery = `SELECT id, name FROM users WHERE id = $1`
-	addUserQuery = `INSERT INTO users (name) VALUES ($1) RETURNING id`
-)
-
-type Storage struct {
-	db          *sql.DB
-	getUserStmt *sql.Stmt
-	addUserStmt *sql.Stmt
+type User struct {
+	ID   int64  `gorm:"primaryKey"`
+	Name string `gorm:"type:varchar(255)"`
 }
 
-// NewStorage initializes a new Storage instance with a database at the given path.
+type Storage struct {
+	db sql.DBHandler
+}
+
+// NewStorage initializes a new Storage instance with a database at the given path
 func NewStorage(connStr string) (*Storage, error) {
-	db, err := sql.Open("postgres", connStr)
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 
-	db.SetMaxOpenConns(100)
-
-	if err = db.Ping(); err != nil {
+	// AutoMigrate will ONLY create tables, missing columns and missing indexes
+	err = db.AutoMigrate(&User{})
+	if err != nil {
 		return nil, err
-	}
-
-	getUserStmt, err := db.Prepare(getUserQuery)
-	if err != nil {
-		return nil, db.Close()
-	}
-
-	addUserStmt, err := db.Prepare(addUserQuery)
-	if err != nil {
-		return nil, db.Close()
 	}
 
 	return &Storage{
-		db:          db,
-		getUserStmt: getUserStmt,
-		addUserStmt: addUserStmt,
+		db: db,
 	}, nil
 }
 
-// Get retrieves the value for a given key and returns an error if any issue occurs during the operation.
-func (p *Storage) Get(id int) (*common.User, error) {
-	user := &common.User{}
+// Get retrieves the user for a given ID
+func (p *Storage) Get(id int64) (*common.User, error) {
+	var user common.User
 
-	err := p.getUserStmt.QueryRow(id).Scan(&user.ID, &user.Name)
+	result := p.db.First(&user, id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errUserNotFound
+		}
 
-	if err == sql.ErrNoRows {
-		return nil, errUserNotFound
+		return nil, result.Error
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+	return &user, nil
 }
 
-// Set stores a value for a given key and returns an error if any issue occurs during the operation.
+// Set stores a user with the given name and returns the ID
 func (p *Storage) Set(name string) (int64, error) {
-	var id int64
+	user := User{Name: name}
 
-	err := p.addUserStmt.QueryRow(name).Scan(&id)
-	if err != nil {
-		return 0, err
+	result := p.db.Create(&user)
+	if result.Error != nil {
+		return 0, result.Error
 	}
 
-	return id, nil
+	return user.ID, nil
 }
 
-// Close closes the database connection and returns an error if any issue occurs during the operation.
+// Close closes the database connection
 func (p *Storage) Close() error {
-	return p.db.Close()
+	sqlDB, err := p.db.DB()
+	if err != nil {
+		return err
+	}
+
+	return sqlDB.Close()
 }

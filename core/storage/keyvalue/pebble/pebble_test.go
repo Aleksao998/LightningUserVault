@@ -28,7 +28,7 @@ func createPebbleStorage() (string, *Storage, error) {
 	return tempDir, store, nil
 }
 
-// TestPebbleStorageGet_NonExistentKey tests getting value with non-existent key.
+// TestPebbleStorageGet_NonExistentKey tests getting value with non-existent key
 func TestPebbleStorageGet_NonExistentKey(t *testing.T) {
 	// Initialize PebbleStorage
 	tempDir, store, err := createPebbleStorage()
@@ -48,7 +48,7 @@ func TestPebbleStorageGet_NonExistentKey(t *testing.T) {
 	}
 }
 
-// TestPabbleStorage_WriteParallel tests writing in storage parallel.
+// TestPabbleStorage_WriteParallel tests writing in storage parallel
 func TestPabbleStorage_WriteParallel(t *testing.T) {
 	var wg sync.WaitGroup
 
@@ -85,7 +85,7 @@ func TestPabbleStorage_WriteParallel(t *testing.T) {
 	}
 }
 
-// TestPebbleStorage_WriteRead tests writing and reading value from storage.
+// TestPebbleStorage_WriteRead tests writing and reading value from storage
 func TestPebbleStorage_WriteRead(t *testing.T) {
 	// Initialize PebbleStorage
 	tempDir, store, err := createPebbleStorage()

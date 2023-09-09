@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Aleksao998/LightingUserVault/core/cache"
 	"github.com/Aleksao998/LightingUserVault/core/common"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
 	"github.com/gin-gonic/gin"
@@ -18,12 +19,14 @@ var (
 
 type UserHandler struct {
 	vault storage.Storage
+	cache cache.Cache
 }
 
 // NewUserHandler creates a new UserHandler with the given storage
-func NewUserHandler(storage storage.Storage) *UserHandler {
+func NewUserHandler(storage storage.Storage, cache cache.Cache) *UserHandler {
 	return &UserHandler{
 		vault: storage,
+		cache: cache,
 	}
 }
 
@@ -45,11 +48,26 @@ func (h *UserHandler) GetHandler(c *gin.Context) {
 		return
 	}
 
-	user, err := h.vault.Get(id)
+	// Try to get the user from cache first
+	user, err := h.cache.Get(id)
+	if err == nil {
+		c.JSON(http.StatusOK, user)
+
+		return
+	}
+
+	// If not in cache, get from vault
+	user, err = h.vault.Get(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, common.ErrorResponse{Error: err.Error()})
 
 		return
+	}
+
+	// Store the fetched user in cache
+	err = h.cache.Set(id, user)
+	if err != nil {
+		//  TODO log
 	}
 
 	c.JSON(http.StatusOK, user)

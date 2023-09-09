@@ -3,7 +3,7 @@ module github.com/Aleksao998/LightingUserVault
 go 1.20
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/bradfitz/gomemcache v0.0.0-20230905024940-24af94b03874
 	github.com/cockroachdb/pebble v0.0.0-20230906203007-2129a6e99d0f
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/cobra v1.7.0

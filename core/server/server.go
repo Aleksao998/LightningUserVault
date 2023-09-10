@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -58,6 +59,7 @@ func NewServer(config *Config) (*Server, error) {
 	cacheConfig := cache.Config{
 		CacheType:       config.CacheType,
 		MemcacheAddress: config.MemcacheAddress,
+		Enabled:         config.EnableCache,
 	}
 
 	// initialize cache
@@ -95,7 +97,7 @@ func NewServer(config *Config) (*Server, error) {
 		}
 	}()
 
-	logger.Info("Server initialized and listening on :9097")
+	logger.Info(fmt.Sprintf("Server initialized and listening on %s", config.ServerAddress.String()))
 
 	return server, nil
 }

@@ -43,7 +43,6 @@ func GetStorage(logger *zap.Logger, config Config) (Storage, error) {
 	case types.PEBBLE:
 		return pebble.NewStorage(pebbleStorageRoute, logger)
 	case types.POSTGRESQL:
-		fmt.Println(config)
 		psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 			"password=%s dbname=%s sslmode=disable",
 			config.DBHost, config.DBPort, config.DBName, config.DBPass, config.DBName)

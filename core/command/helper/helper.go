@@ -8,8 +8,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/Aleksao998/LightingUserVault/core/command"
 )
 
 type ClientCloseResult struct {
@@ -40,7 +38,6 @@ func ResolveAddr(address string, defaultIP IPBinding) (*net.TCPAddr, error) {
 // Like stop, error, etc.
 func HandleSignals(
 	closeFn func() error,
-	outputter command.OutputFormatter,
 ) error {
 	signalCh := getTerminationSignalCh()
 	sig := <-signalCh
@@ -48,12 +45,7 @@ func HandleSignals(
 	closeMessage := fmt.Sprintf("\n[SIGNAL] Caught signal: %v\n", sig)
 	closeMessage += "Gracefully shutting down client...\n"
 
-	outputter.SetCommandResult(
-		&ClientCloseResult{
-			Message: closeMessage,
-		},
-	)
-	outputter.WriteOutput()
+	fmt.Println(closeMessage)
 
 	// Call the server close callback
 	gracefulCh := make(chan struct{})

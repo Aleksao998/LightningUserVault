@@ -1,7 +1,9 @@
 package server
 
 import (
+	"log"
 	"net"
+	"strconv"
 
 	"github.com/Aleksao998/LightingUserVault/core/command/helper"
 	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
@@ -40,7 +42,7 @@ type serverParams struct {
 	serverAddressRaw string
 
 	// enableCache is a flag which represents if cache mechanism is enabled
-	enableCache bool
+	enableCache string
 
 	// cacheType is a cache type [MEMCACHE]
 	cacheType types.CacheType
@@ -125,10 +127,15 @@ func (p *serverParams) initRawParams() error {
 }
 
 func (p *serverParams) generateConfig() *server.Config {
+	enableCache, err := strconv.ParseBool(p.enableCache)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return &server.Config{
 		LogLevel:        p.logLevel,
 		ServerAddress:   p.serverAddress,
-		EnableCache:     p.enableCache,
+		EnableCache:     enableCache,
 		CacheType:       p.cacheType,
 		MemcacheAddress: p.memcacheAddress,
 		StorageType:     p.storageType,

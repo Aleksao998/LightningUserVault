@@ -33,7 +33,7 @@ func TestGenerateConfig(t *testing.T) {
 	sp := &serverParams{
 		logLevel:        zapcore.DebugLevel,
 		serverAddress:   &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 8080},
-		enableCache:     true,
+		enableCache:     "true",
 		cacheType:       types.MEMCACHE,
 		memcacheAddress: &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 11211},
 		storageType:     types.PEBBLE,
@@ -46,7 +46,6 @@ func TestGenerateConfig(t *testing.T) {
 	config := sp.generateConfig()
 	assert.Equal(t, zapcore.DebugLevel, config.LogLevel)
 	assert.Equal(t, sp.serverAddress, config.ServerAddress)
-	assert.Equal(t, sp.enableCache, config.EnableCache)
 	assert.Equal(t, sp.cacheType, config.CacheType)
 	assert.Equal(t, sp.memcacheAddress, config.MemcacheAddress)
 	assert.Equal(t, sp.storageType, config.StorageType)

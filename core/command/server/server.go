@@ -38,10 +38,10 @@ func setFlags(cmd *cobra.Command) {
 		"server endpoint",
 	)
 
-	cmd.Flags().BoolVar(
+	cmd.Flags().StringVar(
 		&params.enableCache,
 		enabledCacheFlag,
-		getEnvWithDefault("ENABLE_CACHE", "true") == "true",
+		getEnvWithDefault("ENABLE_CACHE", "true"),
 		"flag which represents if cache mechanism is enabled",
 	)
 

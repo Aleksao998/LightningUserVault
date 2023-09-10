@@ -7,6 +7,8 @@ on:
 jobs:
   unit_tests:
     runs-on: ubuntu-latest
+    env:
+      E2E_DIR: ./core/e2e
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
@@ -20,7 +22,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - run: go test -coverprofile=coverage.out -covermode=atomic -timeout=5m -race ./...
+      - run: go test $(go list ./... | grep -v $E2E_DIR) -coverprofile=coverage.out -covermode=atomic -timeout=5m -race
 
   fuzz_tests:
     runs-on: ubuntu-latest
@@ -41,3 +43,24 @@ jobs:
       - run: |
             chmod +x ./scripts/run_all_fuzz_tests.sh
             ./scripts/run_all_fuzz_tests.sh
+  e2e_tests:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ROOT: ${{ github.workspace }}
+      BINARY_PATH: ${{ github.workspace }}/build/lighting_user_vault
+      E2E_DIR: ./core/e2e
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.20.7'
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - run: go build -o $BINARY_PATH ./core/main.go
+      - run: go test $E2E_DIR/... -timeout=15m

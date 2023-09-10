@@ -24,9 +24,18 @@ type Cache interface {
 type Config struct {
 	CacheType       types.CacheType
 	MemcacheAddress *net.TCPAddr
+	Enabled         bool
 }
 
 func GetCache(logger *zap.Logger, config Config) (Cache, error) {
+	if !config.Enabled {
+		logger.Debug("Cache disabled")
+
+		return nil, nil
+	}
+
+	logger.Debug("Cache enabled")
+
 	switch config.CacheType {
 	case types.MEMCACHE:
 		return memcache.NewMemcacheCache(logger, config.MemcacheAddress.String())

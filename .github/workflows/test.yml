@@ -7,6 +7,8 @@ on:
 jobs:
   unit_tests:
     runs-on: ubuntu-latest
+    env:
+      E2E_DIR: ./core/e2e
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
@@ -20,7 +22,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - run: go test -coverprofile=coverage.out -covermode=atomic -timeout=5m -race ./...
+      - run: go test $(go list ./... | grep -v $E2E_DIR) -coverprofile=coverage.out -covermode=atomic -timeout=5m -race
 
   fuzz_tests:
     runs-on: ubuntu-latest

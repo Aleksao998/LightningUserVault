@@ -17,5 +17,17 @@ For a comprehensive understanding, the LightningUserVault website is your go-to 
 4. **API Server:**  Discover the heart of LightningUserVault, where requests meet responses. [Check out the API server details](https://gotolabs.gitbook.io/lightninguservault/architecture/api-server).
 
 ## 🌟 Contributions Welcome! 
-Dive in, explore, and help us make LightningUserVault even better.
+Dive in, explore, and help us make LightningUserVault even better. If you're wondering about the standard for PRs, a great way to familiarize yourself is by checking out our [closed PRs](https://github.com/Aleksao998/LightingUserVault/pulls?q=is%3Apr+is%3Aclosed).
+
+### Contribution Guidelines:
+
+1. **Branch Naming:** Your branch should be named in the format ___owner/what_pr_does___.
+2. **PR Review:** Before requesting a review, ensure all GitHub actions pass:
+ - 📜 Go Linter: Ensures code quality and standards
+ - ✅ Verify PR: Checks completeness of the PR description
+ - 🧪 Unit Tests: Validates that individual units of source code work as expected
+ - 🌀 Fuzz Tests: Ensures robustness by feeding random inputs
+ - 🌐 E2E Tests: Validates the complete functionality of some application areas
+
+Let's uphold these standards and make LightningUserVault a benchmark in quality and functionality!
 

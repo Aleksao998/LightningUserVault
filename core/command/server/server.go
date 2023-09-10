@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Aleksao998/LightingUserVault/core/command"
 	"github.com/Aleksao998/LightingUserVault/core/command/helper"
 	"github.com/Aleksao998/LightingUserVault/core/server"
 	"github.com/spf13/cobra"
@@ -96,10 +95,8 @@ func setFlags(cmd *cobra.Command) {
 }
 
 func runCommand(cmd *cobra.Command, _ []string) {
-	outputter := command.InitializeOutputter()
-	if err := runServerLoop(outputter); err != nil {
-		outputter.SetError(err)
-		outputter.WriteOutput()
+	if err := runServerLoop(); err != nil {
+		fmt.Println("ERROR: ", err)
 
 		return
 	}
@@ -109,15 +106,13 @@ func runPreRun(cmd *cobra.Command, _ []string) error {
 	return params.initRawParams()
 }
 
-func runServerLoop(
-	outputter command.OutputFormatter,
-) error {
+func runServerLoop() error {
 	serverInstance, err := server.NewServer(params.generateConfig())
 	if err != nil {
 		return err
 	}
 
-	return helper.HandleSignals(serverInstance.Close, outputter)
+	return helper.HandleSignals(serverInstance.Close)
 }
 
 func getEnvWithDefault(key, defaultValue string) string {

@@ -1,6 +1,7 @@
 <h1 align="center">⚡️LightningUserVault</h1>
 
 LightningUserVault is a modular and efficient web application designed for seamless user data storage and retrieval. Built with flexibility in mind, it allows for easy integration of various storage and caching systems. Whether you're looking to quickly access data with caching or need a robust storage solution, LightningUserVault has got you covered.
+![architecture](https://github.com/Aleksao998/LightingUserVault/assets/42786413/b6816c70-3383-41c8-b459-0bfebb45535d)
 
 ## 🚀 Quickstart:
 Whether you're looking to deploy locally or leverage the power of Docker, LightningUserVault is ready to roll:

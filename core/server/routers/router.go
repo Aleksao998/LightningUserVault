@@ -5,7 +5,9 @@ import (
 	docs "github.com/Aleksao998/LightingUserVault/core/docs"
 	userHandler "github.com/Aleksao998/LightingUserVault/core/server/handlers/user"
 	"github.com/Aleksao998/LightingUserVault/core/storage"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/penglongli/gin-metrics/ginmetrics"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
@@ -18,6 +20,15 @@ type Config struct {
 // InitRouter initializes a new Gin router with predefined routes and middleware
 func InitRouter(logger *zap.Logger, vault storage.Storage, cache cache.Cache, config Config) *gin.Engine {
 	r := gin.New()
+
+	// get global Monitor object
+	m := ginmetrics.GetMonitor()
+
+	// set middleware for gin
+	m.Use(r)
+
+	// set middleware for cors
+	r.Use(cors.Default())
 
 	// Middleware
 	r.Use(gin.Logger())

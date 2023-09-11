@@ -1,0 +1,5 @@
+scrape_configs:
+  - job_name: 'webapp'
+    metrics_path: '/debug/metrics'
+    static_configs:
+      - targets: ['webapp:9090']

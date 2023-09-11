@@ -8,7 +8,6 @@ import (
 )
 
 func FuzzPebbleStorageWriteRead(f *testing.F) {
-	// Initialize PebbleStorage
 	tempDir, store, err := createPebbleStorage()
 	if err != nil {
 		f.Fatalf("error creating pabble storage, %v", err)

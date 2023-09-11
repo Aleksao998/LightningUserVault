@@ -21,13 +21,13 @@ type Config struct {
 func InitRouter(logger *zap.Logger, vault storage.Storage, cache cache.Cache, config Config) *gin.Engine {
 	r := gin.New()
 
-	// get global Monitor object
+	// Get global Monitor object
 	m := ginmetrics.GetMonitor()
 
-	// set middleware for gin
+	// Set middleware for gin
 	m.Use(r)
 
-	// set middleware for cors
+	// Set middleware for cors
 	r.Use(cors.Default())
 
 	// Middleware

@@ -23,13 +23,13 @@ type Server struct {
 
 // NewServer creates a new LightingUserVault server, using the passed in configuration
 func NewServer(config *Config) (*Server, error) {
-	// get a production config
+	// Get a production config
 	cfg := zap.NewProductionConfig()
 
-	// set the desired log level
+	// Set the desired log level
 	cfg.Level.SetLevel(config.LogLevel)
 
-	// build the logger
+	// Build the logger
 	logger, err := cfg.Build()
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func NewServer(config *Config) (*Server, error) {
 
 	defer logger.Sync()
 
-	// create storage config
+	// Create storage config
 	storageConfig := storage.Config{
 		StorageType: config.StorageType,
 		DBHost:      config.DBHost.IP.String(),
@@ -47,7 +47,7 @@ func NewServer(config *Config) (*Server, error) {
 		DBUser:      config.DBUser,
 	}
 
-	// initialize storage
+	// Initialize storage
 	vault, err := storage.GetStorage(logger, storageConfig)
 	if err != nil {
 		logger.Error("Failed to get storage", zap.Error(err))
@@ -55,14 +55,14 @@ func NewServer(config *Config) (*Server, error) {
 		return nil, err
 	}
 
-	// create cache config
+	// Create cache config
 	cacheConfig := cache.Config{
 		CacheType:       config.CacheType,
 		MemcacheAddress: config.MemcacheAddress,
 		Enabled:         config.EnableCache,
 	}
 
-	// initialize cache
+	// Initialize cache
 	cacheMechanism, err := cache.GetCache(logger, cacheConfig)
 	if err != nil {
 		logger.Error("Failed to get cache", zap.Error(err))
@@ -76,14 +76,14 @@ func NewServer(config *Config) (*Server, error) {
 
 	router := routers.InitRouter(logger, vault, cacheMechanism, routerConfig)
 
-	// create http server instance
+	// Create http server instance
 	httpServer := &http.Server{
 		Addr:              config.ServerAddress.String(),
 		Handler:           router,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
-	// initialize server
+	// Initialize server
 	server := &Server{
 		config:     config,
 		httpServer: httpServer,

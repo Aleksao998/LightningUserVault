@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// nextIDKey represents key which will be used to save latest nextID on server stop.
+// nextIDKey represents key which will be used to save latest nextID on server stop
 const nextIDKey = "__nextID__"
 
 type Storage struct {
@@ -19,7 +19,7 @@ type Storage struct {
 	nextID int64
 }
 
-// NewStorage initializes a new Storage instance with a database at the given path.
+// NewStorage initializes a new Storage instance with a database at the given path
 func NewStorage(path string, logger *zap.Logger) (*Storage, error) {
 	db, err := pebble.Open(path, &pebble.Options{})
 	if err != nil {
@@ -38,7 +38,7 @@ func NewStorage(path string, logger *zap.Logger) (*Storage, error) {
 	}, nil
 }
 
-// Set stores a value for a given key and returns an error if any issue occurs during the operation.
+// Set stores a value for a given key and returns an error if any issue occurs during the operation
 func (p *Storage) Set(value string) (int64, error) {
 	id := p.getNextID()
 
@@ -47,7 +47,7 @@ func (p *Storage) Set(value string) (int64, error) {
 		msg := fmt.Sprintf("Id already exists %d:%v", common.BytesToInt64(id), err)
 		p.logger.Error(msg, zap.Int64("id", common.BytesToInt64(id)))
 
-		// TODO check panic
+		// This scenario should never occur. If it does, it indicates a bug in the pebble implementation
 		panic(fmt.Sprintf("Id already exists %d:%v", common.BytesToInt64(id), err))
 	}
 
@@ -59,7 +59,7 @@ func (p *Storage) Set(value string) (int64, error) {
 	return common.BytesToInt64(id), err
 }
 
-// Get retrieves the value for a given key and returns an error if any issue occurs during the operation.
+// Get retrieves the value for a given key and returns an error if any issue occurs during the operation
 func (p *Storage) Get(key int64) (*common.User, error) {
 	value, closer, err := p.db.Get(common.Int64ToBytes(key))
 	if err != nil {
@@ -79,14 +79,14 @@ func (p *Storage) Get(key int64) (*common.User, error) {
 	return user, nil
 }
 
-// getNextID retrieves next id for a new user.
+// getNextID retrieves next id for a new user
 func (p *Storage) getNextID() []byte {
 	id := atomic.AddInt64(&p.nextID, 1)
 
 	return common.Int64ToBytes(id)
 }
 
-// saveNextID saves the current nextID value to the database.
+// saveNextID saves the current nextID value to the database
 func (p *Storage) saveNextID() error {
 	data := common.Int64ToBytes(p.nextID)
 
@@ -100,7 +100,7 @@ func (p *Storage) saveNextID() error {
 	return err
 }
 
-// Close closes the database connection and returns an error if any issue occurs during the operation.
+// Close closes the database connection and returns an error if any issue occurs during the operation
 func (p *Storage) Close() error {
 	if err := p.saveNextID(); err != nil {
 		p.logger.Warn("Could not save next id", zap.Error(err))
@@ -111,7 +111,7 @@ func (p *Storage) Close() error {
 	return p.db.Close()
 }
 
-// loadNextIDFromDB loads the nextID from the database during initialization.
+// loadNextIDFromDB loads the nextID from the database during initialization
 func loadNextIDFromDB(db *pebble.DB) int64 {
 	data, closer, err := db.Get([]byte(nextIDKey))
 	if err != nil {

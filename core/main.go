@@ -6,8 +6,10 @@ import (
 )
 
 func main() {
-	// if .env does not exist, cobra commands will be used
+	// Load environment variables from the .env file
+	// If the .env file is not present, fallback to using cobra commands
 	godotenv.Load()
 
+	// Initialize and execute the root command
 	root.NewRootCommand().Execute()
 }

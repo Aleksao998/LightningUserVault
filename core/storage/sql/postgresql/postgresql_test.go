@@ -13,6 +13,8 @@ import (
 
 var errInternal = errors.New("internal db error")
 
+const mockUserName = "Mocked User"
+
 // TestPostgres_GetValid tests the scenario where a user is successfully retrieved from the database
 func TestPostgres_GetValid(t *testing.T) {
 	t.Parallel()
@@ -24,7 +26,7 @@ func TestPostgres_GetValid(t *testing.T) {
 				t.Fatalf("value is not of type *User")
 			}
 			u.ID = 1
-			u.Name = "Mocked User"
+			u.Name = mockUserName
 
 			return &gorm.DB{}
 		},
@@ -39,7 +41,7 @@ func TestPostgres_GetValid(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, user)
 	assert.Equal(t, int64(1), user.ID)
-	assert.Equal(t, "Mocked User", user.Name)
+	assert.Equal(t, mockUserName, user.Name)
 }
 
 // TestPostgres_GetNotFound tests the scenario where the user is not found in the database
@@ -48,7 +50,7 @@ func TestPostgres_GetNotFound(t *testing.T) {
 
 	mockDB := &mocks.MockSQLdb{
 		FirstFn: func(out interface{}, where ...interface{}) *gorm.DB {
-			return &gorm.DB{Error: gorm.ErrRecordNotFound} // Return a mock *gorm.DB with gorm.ErrRecordNotFound error
+			return &gorm.DB{Error: gorm.ErrRecordNotFound}
 		},
 	}
 
@@ -69,7 +71,7 @@ func TestPostgres_GetInternalError(t *testing.T) {
 
 	mockDB := &mocks.MockSQLdb{
 		FirstFn: func(out interface{}, where ...interface{}) *gorm.DB {
-			return &gorm.DB{Error: errInternal} // Return a mock *gorm.DB with gorm.ErrRecordNotFound error
+			return &gorm.DB{Error: errInternal}
 		},
 	}
 
@@ -95,7 +97,7 @@ func TestPostgres_SetSuccessfully(t *testing.T) {
 				t.Fatalf("value is not of type *User")
 			}
 			u.ID = 1
-			u.Name = "Mocked User"
+			u.Name = mockUserName
 
 			return &gorm.DB{}
 		},
@@ -106,7 +108,7 @@ func TestPostgres_SetSuccessfully(t *testing.T) {
 		logger: zap.NewNop(),
 	}
 
-	id, err := storage.Set("Mocked User")
+	id, err := storage.Set(mockUserName)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(1), id)
 }
@@ -126,7 +128,7 @@ func TestPostgres_SetError(t *testing.T) {
 		logger: zap.NewNop(),
 	}
 
-	id, err := storage.Set("Mocked User")
+	id, err := storage.Set(mockUserName)
 	assert.Error(t, err)
 	assert.Equal(t, errInternal, err)
 	assert.Equal(t, int64(0), id)

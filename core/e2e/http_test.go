@@ -7,13 +7,13 @@ import (
 	"testing"
 
 	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/e2e/freamwork"
+	"github.com/Aleksao998/LightingUserVault/core/e2e/framework"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestE2E_SetAndGet(t *testing.T) {
 	// Initialize and start the test server using the framework
-	testServer := freamwork.NewTestServerAndStart(t)
+	testServer := framework.NewTestServerAndStart(t)
 
 	// Create a request to set a new user
 	user := common.User{Name: "John Doe"}
@@ -46,12 +46,12 @@ func TestE2E_SetAndGet(t *testing.T) {
 	assert.Equal(t, int64(1), user.ID)
 
 	// Teardown logic after all tests
-	freamwork.CleanupStorage()
+	framework.CleanupStorage()
 }
 
 func TestE2E_SetTwoItemsWithRestart(t *testing.T) {
 	// Initialize and start the test server using the framework
-	testServer := freamwork.NewTestServerAndStart(t)
+	testServer := framework.NewTestServerAndStart(t)
 
 	// Create a request to set the first user
 	user1 := common.User{Name: "John Doe"}
@@ -73,7 +73,7 @@ func TestE2E_SetTwoItemsWithRestart(t *testing.T) {
 	testServer.Stop()
 
 	// Start the server again
-	testServer = freamwork.NewTestServerAndStart(t)
+	testServer = framework.NewTestServerAndStart(t)
 
 	// Create a request to set the second user
 	user2 := common.User{Name: "Jane Smith"}
@@ -97,5 +97,5 @@ func TestE2E_SetTwoItemsWithRestart(t *testing.T) {
 	assert.Equal(t, "Jane Smith", retrievedUser.Name)
 
 	// Teardown logic after all tests
-	freamwork.CleanupStorage()
+	framework.CleanupStorage()
 }

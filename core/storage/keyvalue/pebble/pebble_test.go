@@ -31,7 +31,6 @@ func createPebbleStorage() (string, *Storage, error) {
 
 // TestPebbleStorageGet_NonExistentKey tests getting value with non-existent key
 func TestPebbleStorageGet_NonExistentKey(t *testing.T) {
-	// Initialize PebbleStorage
 	tempDir, store, err := createPebbleStorage()
 	if err != nil {
 		t.Fatalf("error creating pabble storage, %v", err)
@@ -53,7 +52,6 @@ func TestPebbleStorageGet_NonExistentKey(t *testing.T) {
 func TestPabbleStorage_WriteParallel(t *testing.T) {
 	var wg sync.WaitGroup
 
-	// Initialize PebbleStorage
 	tempDir, store, err := createPebbleStorage()
 	if err != nil {
 		t.Fatalf("error creating pabble storage, %v", err)

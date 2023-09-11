@@ -17,7 +17,6 @@ const (
 
 var errInvalidStorage = errors.New("invalid storage type")
 
-// Storage represents a database interface.
 type Storage interface {
 	// Set stores a value and returns user ID and an error if any issue occurs during the operation
 	Set(value string) (int64, error)
@@ -38,6 +37,8 @@ type Config struct {
 	DBName      string
 }
 
+// GetStorage initializes and returns a storage instance based on the provided configuration
+// The method supports multiple storage types including PEBBLE and POSTGRESQL
 func GetStorage(logger *zap.Logger, config Config) (Storage, error) {
 	switch config.StorageType {
 	case types.PEBBLE:

@@ -69,7 +69,6 @@ func TestRouter_SetUser(t *testing.T) {
 	userData := map[string]interface{}{
 		"id":   1,
 		"name": "User-1",
-		// Add other fields as necessary
 	}
 	userDataBytes, _ := json.Marshal(userData)
 

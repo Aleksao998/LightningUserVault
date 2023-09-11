@@ -1,4 +1,4 @@
-module github.com/Aleksao998/LightingUserVault
+module github.com/Aleksao998/LightningUserVault
 
 go 1.20
 

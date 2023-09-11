@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/Aleksao998/LightingUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/common"
 )
 
 type (

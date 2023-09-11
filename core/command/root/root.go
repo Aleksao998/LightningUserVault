@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/server"
+	"github.com/Aleksao998/LightningUserVault/core/command/server"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +15,7 @@ type RootCommand struct {
 func NewRootCommand() *RootCommand {
 	rootCommand := &RootCommand{
 		baseCmd: &cobra.Command{
-			Short: "LightingUserVault is a high-performance storage solution for rapid user data retrieval and management",
+			Short: "LightningUserVault is a high-performance storage solution for rapid user data retrieval and management",
 		},
 	}
 

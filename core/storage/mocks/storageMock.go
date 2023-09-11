@@ -1,6 +1,6 @@
 package mocks
 
-import "github.com/Aleksao998/LightingUserVault/core/common"
+import "github.com/Aleksao998/LightningUserVault/core/common"
 
 type (
 	getDelegate   func(key int64) (*common.User, error)

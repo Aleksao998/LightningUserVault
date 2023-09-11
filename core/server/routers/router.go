@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"github.com/Aleksao998/LightingUserVault/core/cache"
-	docs "github.com/Aleksao998/LightingUserVault/core/docs"
-	userHandler "github.com/Aleksao998/LightingUserVault/core/server/handlers/user"
-	"github.com/Aleksao998/LightingUserVault/core/storage"
+	"github.com/Aleksao998/LightningUserVault/core/cache"
+	docs "github.com/Aleksao998/LightningUserVault/core/docs"
+	userHandler "github.com/Aleksao998/LightningUserVault/core/server/handlers/user"
+	"github.com/Aleksao998/LightningUserVault/core/storage"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/penglongli/gin-metrics/ginmetrics"

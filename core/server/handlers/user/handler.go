@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Aleksao998/LightingUserVault/core/cache"
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage"
+	"github.com/Aleksao998/LightningUserVault/core/cache"
+	"github.com/Aleksao998/LightningUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/storage"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )

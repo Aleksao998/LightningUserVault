@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/Aleksao998/LightingUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/common"
 	"github.com/bradfitz/gomemcache/memcache"
 	"go.uber.org/zap"
 )

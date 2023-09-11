@@ -7,9 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	cacheMock "github.com/Aleksao998/LightingUserVault/core/cache/mocks"
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	storageMock "github.com/Aleksao998/LightingUserVault/core/storage/mocks"
+	cacheMock "github.com/Aleksao998/LightningUserVault/core/cache/mocks"
+	"github.com/Aleksao998/LightningUserVault/core/common"
+	storageMock "github.com/Aleksao998/LightningUserVault/core/storage/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 )

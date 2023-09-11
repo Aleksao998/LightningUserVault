@@ -1,0 +1,22 @@
+project_name: lighting_user_vault
+
+builds:
+  - id: "lighting_user_vault"
+    main: ./core/main.go
+    binary: lighting_user_vault
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+
+archives:
+  - format: tar.gz
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    files:
+      - build/lighting_user_vault
+
+release:
+  github:
+    owner: Aleksao998
+    name: LightningUserVault

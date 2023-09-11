@@ -5,9 +5,9 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/helper"
-	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
-	"github.com/Aleksao998/LightingUserVault/core/server"
+	"github.com/Aleksao998/LightningUserVault/core/command/helper"
+	"github.com/Aleksao998/LightningUserVault/core/command/server/types"
+	"github.com/Aleksao998/LightningUserVault/core/server"
 	"go.uber.org/zap/zapcore"
 )
 

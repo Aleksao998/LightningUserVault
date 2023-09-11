@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Aleksao998/LightingUserVault/core/command/root"
+	"github.com/Aleksao998/LightningUserVault/core/command/root"
 	"github.com/joho/godotenv"
 )
 

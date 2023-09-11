@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage/keyvalue/pebble"
-	"github.com/Aleksao998/LightingUserVault/core/storage/sql/postgresql"
+	"github.com/Aleksao998/LightningUserVault/core/command/server/types"
+	"github.com/Aleksao998/LightningUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/storage/keyvalue/pebble"
+	"github.com/Aleksao998/LightningUserVault/core/storage/sql/postgresql"
 	"go.uber.org/zap"
 )
 

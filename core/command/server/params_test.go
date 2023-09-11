@@ -4,7 +4,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
+	"github.com/Aleksao998/LightningUserVault/core/command/server/types"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zapcore"
 )

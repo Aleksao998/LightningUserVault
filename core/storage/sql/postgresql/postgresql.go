@@ -3,8 +3,8 @@ package postgresql
 import (
 	"errors"
 
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage/sql"
+	"github.com/Aleksao998/LightningUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/storage/sql"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

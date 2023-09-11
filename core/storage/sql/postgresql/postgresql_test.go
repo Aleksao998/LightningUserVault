@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/storage/mocks"
+	"github.com/Aleksao998/LightningUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/storage/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"gorm.io/gorm"

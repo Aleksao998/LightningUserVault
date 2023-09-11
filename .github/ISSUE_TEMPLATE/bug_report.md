@@ -1,6 +1,6 @@
 ---
 name: "\U0001F41E Bug report"
-about: Report a bug or problem with running LightingUserVault
+about: Report a bug or problem with running LightningUserVault
 labels: Bug
 ---
 
@@ -29,7 +29,7 @@ Yes, the previous version in which this bug was not present was:
 
 ## 🔬 Minimal Reproduction
 
-<!-- ✍️-->  Please let us know how we can reproduce this issue. Include the exact method you used to run LightingUserVault.
+<!-- ✍️-->  Please let us know how we can reproduce this issue. Include the exact method you used to run LightningUserVault.
 
 
 ## 🔥 Error

@@ -3,11 +3,11 @@ package server
 import (
 	"net"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
+	"github.com/Aleksao998/LightningUserVault/core/command/server/types"
 	"go.uber.org/zap/zapcore"
 )
 
-// Config is used to parametrize the LightingUserVault client
+// Config is used to parametrize the LightningUserVault client
 type Config struct {
 	// LogLevel is a log type
 	LogLevel zapcore.Level

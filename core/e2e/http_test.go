@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/Aleksao998/LightingUserVault/core/common"
-	"github.com/Aleksao998/LightingUserVault/core/e2e/framework"
+	"github.com/Aleksao998/LightningUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/e2e/framework"
 	"github.com/stretchr/testify/assert"
 )
 

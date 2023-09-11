@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/helper"
-	serverCommand "github.com/Aleksao998/LightingUserVault/core/command/server"
-	"github.com/Aleksao998/LightingUserVault/core/server"
+	"github.com/Aleksao998/LightningUserVault/core/command/helper"
+	serverCommand "github.com/Aleksao998/LightningUserVault/core/command/server"
+	"github.com/Aleksao998/LightningUserVault/core/server"
 	"go.uber.org/zap/zapcore"
 )
 

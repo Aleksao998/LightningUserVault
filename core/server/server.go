@@ -7,13 +7,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Aleksao998/LightingUserVault/core/cache"
-	"github.com/Aleksao998/LightingUserVault/core/server/routers"
-	"github.com/Aleksao998/LightingUserVault/core/storage"
+	"github.com/Aleksao998/LightningUserVault/core/cache"
+	"github.com/Aleksao998/LightningUserVault/core/server/routers"
+	"github.com/Aleksao998/LightningUserVault/core/storage"
 	"go.uber.org/zap"
 )
 
-// Server is the central manager of the LightingUserVault
+// Server is the central manager of the LightningUserVault
 type Server struct {
 	config     *Config
 	httpServer *http.Server
@@ -21,7 +21,7 @@ type Server struct {
 	storage    storage.Storage
 }
 
-// NewServer creates a new LightingUserVault server, using the passed in configuration
+// NewServer creates a new LightningUserVault server, using the passed in configuration
 func NewServer(config *Config) (*Server, error) {
 	// Get a production config
 	cfg := zap.NewProductionConfig()
@@ -102,7 +102,7 @@ func NewServer(config *Config) (*Server, error) {
 	return server, nil
 }
 
-// Close gracefully shuts down the LightingUserVault server
+// Close gracefully shuts down the LightningUserVault server
 func (s *Server) Close() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

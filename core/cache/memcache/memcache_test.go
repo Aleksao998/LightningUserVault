@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/Aleksao998/LightingUserVault/core/cache/memcache/mock"
-	"github.com/Aleksao998/LightingUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/cache/memcache/mock"
+	"github.com/Aleksao998/LightningUserVault/core/common"
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"

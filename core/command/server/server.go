@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Aleksao998/LightingUserVault/core/command/helper"
-	"github.com/Aleksao998/LightingUserVault/core/server"
+	"github.com/Aleksao998/LightningUserVault/core/command/helper"
+	"github.com/Aleksao998/LightningUserVault/core/server"
 	"github.com/spf13/cobra"
 )
 
 func GetCommand() *cobra.Command {
 	serverCmd := &cobra.Command{
 		Use:     "server",
-		Short:   "The default command that starts LightingUserVault",
+		Short:   "The default command that starts LightningUserVault",
 		PreRunE: runPreRun,
 		Run:     runCommand,
 	}

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net"
 
-	"github.com/Aleksao998/LightingUserVault/core/cache/memcache"
-	"github.com/Aleksao998/LightingUserVault/core/command/server/types"
-	"github.com/Aleksao998/LightingUserVault/core/common"
+	"github.com/Aleksao998/LightningUserVault/core/cache/memcache"
+	"github.com/Aleksao998/LightningUserVault/core/command/server/types"
+	"github.com/Aleksao998/LightningUserVault/core/common"
 	"go.uber.org/zap"
 )
 
